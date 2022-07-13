@@ -14,6 +14,8 @@ app.use(cors({
     origin: 'http://localhost:3000'
   }));
 
+app.use(express.json());
+
 app.post("/login/:username/:password", (req, res) => {
    db.one(`SELECT hashedpassword, id FROM users WHERE username = '${req.params.username}'`)
   .then((data) => {
@@ -33,8 +35,8 @@ app.post("/login/:username/:password", (req, res) => {
   })
 })
 
-app.post("/create/:str/:num/:boo",auth, (req, res) => {
-    db.query(`INSERT INTO data (str, num, boo) VALUES ($1, $2, $3)`, [req.params.str, req.params.num, req.params.boo])
+app.post("/create",auth, (req, res) => {
+    db.query(`INSERT INTO data (str, num, boo) VALUES ($1, $2, $3)`, [req.body.str, req.body.num, req.body.boo])
     res.send('ok')
 })
 
@@ -45,8 +47,8 @@ app.get("/read",auth, (req, res) => {
     })
 })
 
-app.put("/update/:id/:str/:num/:boo",auth, (req, res) => {
-    db.query(`UPDATE data SET str = $1, num = $2, boo = $3 WHERE id = $4`, [req.params.str, req.params.num, req.params.boo, req.params.id])
+app.put("/update/:id",auth, (req, res) => {
+    db.query(`UPDATE data SET str = $1, num = $2, boo = $3 WHERE id = $4`, [req.body.str, req.body.num, req.body.boo, req.params.id])
     res.send('ok')
 })
 
